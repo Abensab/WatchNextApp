@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context="com.watchnext.watchnext.MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/textView_watchnext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_below="@+id/imageView"
+        android:text="WatchNext"
+        android:textColor="#ddd"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/editText_name"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_watchnext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:background="#11000000"
+        android:ems="10"
+        android:hint="Username"
+        android:textColorHint="#aaa"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textColor="#ddd"
+        android:textSize="16dp" />
+
+    <EditText
+        android:id="@+id/editText_passwd"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:background="#11000000"
+        android:ems="10"
+        android:hint="Password"
+        android:textColorHint="#aaa"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColor="#ddd"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/button_login"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText_passwd"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/rounded_button"
+        android:text="Login"
+        android:textColor="#64a6a2"
+        android:textSize="16dp"/>
+
+</RelativeLayout>
