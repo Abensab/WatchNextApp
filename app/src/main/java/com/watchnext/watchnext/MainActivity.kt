@@ -3,7 +3,6 @@ package com.watchnext.watchnext
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -13,9 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.reference
-        val firestore = FirebaseFirestore.getInstance()//TODO me quede por aqui
+        val firestore = FirebaseFirestore.getInstance()//referencia de firestore
 
         var failedLogin = true
 
@@ -47,6 +44,9 @@ class MainActivity : AppCompatActivity() {
                 alertDialog.setMessage(errorMessage)
             }
             alertDialog.show()
+            if(!failedLogin){
+                //TODO redireccionamos a la otra pagina
+            }
         }
 
     }
