@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Intent
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,6 +49,8 @@ class MainActivity : AppCompatActivity() {
             alertDialog.show()
             if(!failedLogin){
                 //TODO redireccionamos a la otra pagina
+                val intent = Intent(this, AceptarTareaActivity::class.java)
+                startActivity(intent)
             }
         }
 

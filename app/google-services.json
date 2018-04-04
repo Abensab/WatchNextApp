@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "858046686031",
+    "firebase_url": "https://wane-3630f.firebaseio.com",
+    "project_id": "wane-3630f",
+    "storage_bucket": "wane-3630f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858046686031:android:8df9ec7c530d3543",
+        "android_client_info": {
+          "package_name": "com.watchnext.watchnext"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858046686031-58labb5br5u2v0cqb6u6etm148vo3d1g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.watchnext.watchnext",
+            "certificate_hash": "33d969ac46cd4734d96abb0b49a331b664616cfa"
+          }
+        },
+        {
+          "client_id": "858046686031-bplr40f2bmcif3jge1mopnq02tk1au7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB_nTt5Hivp93y3KJd-N8WsBoNq9mCpIU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858046686031-bplr40f2bmcif3jge1mopnq02tk1au7j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
