@@ -14,18 +14,16 @@ buildscript {
         // in the individual module build.gradle files
         classpath 'com.google.gms:google-services:3.2.0'
 
-}
+    }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url "https://maven.google.com" // Google's Maven repository
+    allprojects {
+        repositories {
+            google()
+            jcenter()
+            maven {
+                url "https://maven.google.com" // Google's Maven repository
+            }
         }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    
 }
