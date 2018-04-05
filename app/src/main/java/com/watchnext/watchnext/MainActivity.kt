@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             }
             alertDialog.show()
             if(!failedLogin){
+                failedLogin=true
                 //TODO redireccionamos a la otra pagina
             }
         }
