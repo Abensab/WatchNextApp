@@ -74,6 +74,10 @@ class MainActivity : AppCompatActivity() {
                 alertDialogBuilder.setMessage(errorMessage)
                 var a = alertDialogBuilder.create()
                 a.show()
+
+                
+            }
+
             }
         }
     }
