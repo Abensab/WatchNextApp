@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".AcceptingTaskActivity" />
         <activity android:name=".AceptarTareaActivity" />
-        <activity android:name=".TareaEnEjecucionActivity"></activity>
+        <activity android:name=".TareaEnEjecucionActivity" />
+        <activity android:name=".FeedbackAportadoActivity"></activity>
     </application>
 
 </manifest>
