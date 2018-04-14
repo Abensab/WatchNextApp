@@ -62,7 +62,17 @@
         android:text="Aceptar tarea"
         android:textColor="#eeeeee"
         android:textSize="20dp"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:background="@drawable/rounded_button"/>
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="Log out"
+        android:backgroundTint="@color/colorAccent"/>
 
 
 </RelativeLayout>
