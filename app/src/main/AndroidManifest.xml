@@ -19,7 +19,8 @@
         <activity android:name=".AcceptingTaskActivity" />
         <activity android:name=".AceptarTareaActivity" />
         <activity android:name=".TareaEnEjecucionActivity" />
-        <activity android:name=".FeedbackAportadoActivity"></activity>
+        <activity android:name=".FeedbackAportadoActivity" />
+        <activity android:name=".VerDetallesActivity"></activity>
     </application>
 
 </manifest>
