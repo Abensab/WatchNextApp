@@ -70,6 +70,7 @@ class AceptarTareaActivity : AppCompatActivity() {
                     operario=document
                     operariosRef.document(operario.get("id").toString()).collection("tareas").get().addOnSuccessListener { snap->
                         for (doc in snap.documents){
+                            Log.w("ATA-OPERARIO-ENCONTRADO", "documento: " + doc.get("data") as Tarea)
                             mostrarTarea(doc,operario)
                             break
                         }
@@ -119,7 +120,7 @@ class AceptarTareaActivity : AppCompatActivity() {
 
         operariosAsignadosRef.document(operario.id.toString()).set(operario.toStringMap())
         operariosAsignadosRef.document(operario.id.toString()).update(operario.toArrayMap())
-        operariosAsignadosRef.document(operario.id.toString()).collection("Tareas").add(tarea)
+        operariosAsignadosRef.document(operario.id.toString()).collection("Tareas").document(tarea.id).set(tarea.ToMap())//TODO hacer lo de la clase tarea
 
         nombreTarea_textView.text = tarea.get("titulo").toString()
         button_aceptarTarea.setActivated(true)
