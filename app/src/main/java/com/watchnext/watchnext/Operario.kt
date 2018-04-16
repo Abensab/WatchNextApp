@@ -5,7 +5,7 @@ import com.google.firebase.firestore.CollectionReference
 
 class Operario(var id: Number, var conectado: Boolean, var etiquetas:ArrayList<String>, var tareas:CollectionReference) {
     fun toStringMap(): MutableMap<String, Any> {
-        var map = mapOf("id" to id.toString(), "conectado" to conectado.toString())
+        var map = mapOf("id" to id, "conectado" to conectado.toString())
         return map.toMutableMap()
     }
     fun toArrayMap(): MutableMap<String,Any> {

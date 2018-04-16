@@ -3,12 +3,14 @@ package com.watchnext.watchnext
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Display
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_tarea_en_ejecucion.*
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -21,13 +23,20 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tarea_en_ejecucion)
-        val objetoIntent : Intent =intent
+        val objetoIntent: Intent = intent
         var CodOperario = objetoIntent.getStringExtra("operario")
         var IdTarea = objetoIntent.getStringExtra("IDtarea")
 
         var db = FirebaseFirestore.getInstance()//referencia de firestore
-        var tareasSinAsignarRef = db.collection("sinAsignar")
-        var tareasSinAsignar = tareasSinAsignarRef.get()
+        var tarea=db.collection("asignadas").document(CodOperario).collection("Tareas").document(IdTarea)
+        imageButton_finalizarTarea.setOnClickListener {
+            var h_fin = mapOf<String, Any>("h_fin" to Timestamp(System.currentTimeMillis()))
+            Log.w("ATA-timestamp", "timestamp: "+h_fin.get("h_inicio"))
+            tarea.update(h_fin)
+            val intent = Intent(this, AceptarTareaActivity::class.java)
+            intent.putExtra("operario", CodOperario)
+            startActivity(intent, Bundle())
+        }
         displayTime()
 
     }

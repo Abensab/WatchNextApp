@@ -67,21 +67,24 @@ class AceptarTareaActivity : AppCompatActivity() {
         var doc :DocumentSnapshot
         var tar :DocumentSnapshot
         var queryOperario =db.collection("asignadas").whereEqualTo("id",CodOperario).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
-            doc=task.getResult().documents.get(0) as DocumentSnapshot
-            Log.w("ATA-QUERY-OP", "id documento: " + doc.get("id"))
+            if(!task.getResult().documents.isEmpty()){
+                doc=task.getResult().documents.get(0) as DocumentSnapshot
+                Log.w("ATA-QUERY-OP", "id documento: " + doc.get("id"))
 
-            db.collection("asignadas").document(CodOperario).collection("Tareas").whereEqualTo("pausada",false).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
-                Log.w("ATA-QUERY-Tarea", "Tamaño coleccion tareas: " + task.getResult().documents.isEmpty())
-                if(!task.getResult().documents.isEmpty()) {
-                    encontrado=true
-                    tar = task.getResult().documents.get(0) as DocumentSnapshot
-                    Log.w("ATA-QUERY-Tarea", "id tarea: " + tar.get("id"))
-                    val intent = Intent(this, TareaEnEjecucionActivity::class.java)
-                    intent.putExtra("operario", CodOperario)
-                    intent.putExtra("IDtarea", tar.get("id").toString())
-                    startActivity(intent, Bundle())
-                }
-            })
+                db.collection("asignadas").document(CodOperario).collection("Tareas").whereEqualTo("pausada",false).whereEqualTo("h_fin",0).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
+                    Log.w("ATA-QUERY-Tarea", "Tamaño coleccion tareas: " + task.getResult().documents.isEmpty())
+                    if (!task.getResult().documents.isEmpty()) {
+                        encontrado = true
+                        tar = task.getResult().documents.get(0) as DocumentSnapshot
+                        Log.w("ATA-QUERY-Tarea", "id tarea: " + tar.get("id"))
+                        val intent = Intent(this, TareaEnEjecucionActivity::class.java)
+                        intent.putExtra("operario", CodOperario)
+                        intent.putExtra("IDtarea", tar.get("id").toString())
+                        startActivity(intent, Bundle())
+                    }
+                })
+
+
             val childEventListener =  object: EventListener<DocumentSnapshot>{
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     Log.w("ATA-QUERY-Tarea", "Cambio " + p0?.toString())
@@ -96,7 +99,7 @@ class AceptarTareaActivity : AppCompatActivity() {
                 }
             }
             db.collection("asignadas").document(CodOperario).addSnapshotListener(childEventListener)
-        })
+        }})
         if(!encontrado) {
             var tareasSinAsignarRef = db.collection("sinAsignar")
             var tareasSinAsignar = tareasSinAsignarRef.get()
