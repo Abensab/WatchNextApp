@@ -21,7 +21,6 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tarea_en_ejecucion)
-        setContentView(R.layout.activity_aceptar_tarea)
         val objetoIntent : Intent =intent
         var CodOperario = objetoIntent.getStringExtra("operario")
         var IdTarea = objetoIntent.getStringExtra("IDtarea")
@@ -29,13 +28,7 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
         var db = FirebaseFirestore.getInstance()//referencia de firestore
         var tareasSinAsignarRef = db.collection("sinAsignar")
         var tareasSinAsignar = tareasSinAsignarRef.get()
-//        nombreTarea_textView_EnEjecucion.text="HOLA SOY ABRY, TU AMIGO"
-//        nombreTarea_textView = findViewById(R.id.nombreTarea_textView_EnEjeucion)
-//        duracionTarea_textView = findViewById(R.id.duracionTarea_textView_EnEjeucion)
-//        imageButton_verDetalles = findViewById(R.id.imageButton_verDetalles)
-//        imageButton_finalizarTarea = findViewById(R.id.imageButton_finalizarTarea)
-//        imageButton_notificarIncidencia = findViewById(R.id.imageButton_notificarIncidencia)
-//        displayTime()
+        displayTime()
 
     }
 

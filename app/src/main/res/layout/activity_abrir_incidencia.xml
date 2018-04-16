@@ -79,7 +79,6 @@
 
     <Switch
         android:id="@+id/switch3"
-        style="@android:style/Widget.Material.Light.CompoundButton.Switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -117,7 +116,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="134dp"
-        android:background="?android:attr/searchWidgetCorpusItemBackground"
         android:max="100"
         android:progress="67"
         tools:visibility="visible" />
