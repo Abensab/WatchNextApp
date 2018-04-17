@@ -1,6 +1,7 @@
 package com.watchnext.watchnext
 
 import com.google.firebase.firestore.DocumentSnapshot
+import java.util.*
 
 
 class Tarea(var id: Number, var asignable: Boolean,
@@ -17,20 +18,20 @@ class Tarea(var id: Number, var asignable: Boolean,
                     t.get("titulo") as String, false)
 
     fun toMap(): MutableMap<String, Any> {
-        var map = mapOf("id" to id.toString(),
-                "asignable" to asignable,
-                "descripcion" to descripcion.toString(),
-                "estimado" to estimado.toString(),
-                "fecha_realizacion" to fechaRealizacion.toString(),
-                "h_inicio" to h_inicio.toString(),
-                "h_fin" to h_fin.toString(),
-                "pausable" to pausable.toString(),
-                "prioridad" to prioridad.toString(),
-                "titulo" to titulo.toString(), "pausada" to pausada)
+        var map = mapOf("id" to id,
+        "asignable" to asignable,
+        "descripcion" to descripcion,
+        "estimado" to estimado,
+        "fecha_realizacion" to fechaRealizacion,
+        "h_inicio" to h_inicio,
+        "h_fin" to h_fin,
+        "pausable" to pausable,
+        "prioridad" to prioridad,
+        "titulo" to titulo, "pausada" to pausada)
         return map.toMutableMap()
     }
     fun toArrayMap(): MutableMap<String,Any> {
-        var map = mapOf("etiquetas" to etiquetas as ArrayList<String>)
+        var map = mapOf("etiquetas" to etiquetas)
         return map.toMutableMap()
     }
 
