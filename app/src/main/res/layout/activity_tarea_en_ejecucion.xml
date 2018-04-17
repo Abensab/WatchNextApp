@@ -10,14 +10,14 @@
     <TextView
         android:id="@+id/time_textView_EnEjecucion"
         android:layout_width="260dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="30dp"
         android:text=""
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="100dp" />
+        android:textSize="80dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,23 +32,21 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:text="Reparar Grifo"
             android:textAlignment="center"
-            android:textSize="40sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/duracionTarea_textView_EnEjecucion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
             android:layout_marginTop="30dp"
+            android:layout_below="@id/nombreTarea_textView_EnEjecucion"
             android:text="TextView"
             android:textAlignment="center"
-            android:textSize="25sp"
+            android:textSize="20sp"
         />
-        <!--android:layout_below="@+id/duracionTarea_textView_EnEjecucion"-->
 
     </RelativeLayout>
 
@@ -58,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="45dp"
+        android:layout_marginBottom="70dp"
         app:srcCompat="@android:drawable/ic_menu_view"
         android:onClick="verDetalles_buttonClicked"/>
 
@@ -87,7 +85,7 @@
         android:layout_height="36dp"
         android:layout_alignStart="@+id/time_textView_EnEjecucion"
         android:layout_below="@+id/imageButton_verDetalles"
-        android:layout_marginTop="-45dp"
+        android:layout_marginTop="-70dp"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         tools:text="Notificar incidencia" />
@@ -98,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageButton_verDetalles"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-45dp"
+        android:layout_marginTop="-70dp"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         tools:text="Ver detalles" />
@@ -109,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/imageButton_finalizarTarea"
         android:layout_below="@+id/imageButton_verDetalles"
-        android:layout_marginTop="-45dp"
+        android:layout_marginTop="-70dp"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         tools:text="Finalizar tarea" />
