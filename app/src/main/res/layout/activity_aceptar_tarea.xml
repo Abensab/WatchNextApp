@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/time_textView"
         android:layout_width="260dp"
-        android:layout_height="130dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
@@ -32,10 +32,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:text="Reparar Grifo"
             android:textAlignment="center"
-            android:textSize="40sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/duracionTarea_textView"
@@ -46,7 +46,7 @@
             android:text="TextView"
             android:layout_below="@+id/nombreTarea_textView"
             android:layout_marginTop="30dp"
-            android:textSize="25sp"/>
+            android:textSize="20sp"/>
 
     </RelativeLayout>
 
