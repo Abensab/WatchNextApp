@@ -10,14 +10,14 @@
     <TextView
         android:id="@+id/time_textView"
         android:layout_width="260dp"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="30dp"
         android:text=""
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="100dp" />
+        android:textSize="80dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -72,7 +72,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:text="Log out"
-        android:backgroundTint="@color/colorAccent"/>
+        android:textColor="@android:color/holo_red_dark"
+        android:background="@android:color/transparent"/>
 
 
 </RelativeLayout>
