@@ -8,7 +8,7 @@
     tools:context=".FeedbackAportadoActivity">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/nivelSatisfaccionTextView"
         android:layout_width="wrap_content"
         android:layout_height="123dp"
         android:text="Nivel de satisfacción"
@@ -32,13 +32,13 @@
         tools:layout_editor_absoluteY="168dp" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tareaTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="171dp"
-        android:text="Tarea: ..."
+        android:text="Tarea: "
         android:textAlignment="center"
         android:textColor="?attr/colorButtonNormal"
         android:textSize="30sp"
@@ -47,20 +47,22 @@
         tools:layout_editor_absoluteY="195dp" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonEnviarNivelSatisfaccion"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:background="@android:color/holo_blue_bright"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Enviar"
+        android:onClick="satisfactionButtonClicked"
         android:textSize="18sp"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="503dp" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/imageViewDissatisfied"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -69,24 +71,7 @@
         app:srcCompat="@mipmap/ic_sentiment_dissatisfied" />
 
     <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="281dp"
-        android:layout_marginEnd="15dp"
-        app:srcCompat="@mipmap/ic_sentiment_satisfied" />
-
-    <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="281dp"
-        android:layout_centerHorizontal="true"
-        app:srcCompat="@mipmap/ic_sentiment_neutral" />
-
-    <ImageView
-        android:id="@+id/imageView13"
+        android:id="@+id/imageViewDissatisfiedBorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="260dp"
@@ -95,20 +80,37 @@
         app:srcCompat="@mipmap/ic_feedback_border" />
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/imageViewNeutral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="281dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@mipmap/ic_sentiment_neutral" />
+
+    <ImageView
+        android:id="@+id/imageViewNeutralBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="260dp"
+        app:srcCompat="@mipmap/ic_feedback_border" />
+
+    <ImageView
+        android:id="@+id/imageViewSatisfied"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="281dp"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@mipmap/ic_sentiment_satisfied" />
+
+    <ImageView
+        android:id="@+id/imageViewSatisfiedBorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="260dp"
         android:layout_marginEnd="-6dp"
-        app:srcCompat="@mipmap/ic_feedback_border" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="260dp"
-        android:layout_centerHorizontal="true"
         app:srcCompat="@mipmap/ic_feedback_border" />
 
 </RelativeLayout>

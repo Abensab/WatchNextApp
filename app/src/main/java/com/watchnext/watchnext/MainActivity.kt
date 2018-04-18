@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                                     val intent = Intent(this, AceptarTareaActivity::class.java)
                                     intent.putExtra("operario", CodOperario)
                                     startActivity(intent, Bundle())
+
                                 })
                                 val b = successDialogBuilder.create()
                                 b.show()
@@ -73,8 +74,6 @@ class MainActivity : AppCompatActivity() {
                 alertDialogBuilder.setMessage(errorMessage)
                 var a = alertDialogBuilder.create()
                 a.show()
-
-
             }
 
         }

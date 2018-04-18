@@ -48,12 +48,13 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:background="@android:color/holo_blue_bright"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Enviar"
         android:textSize="18sp"
         tools:layout_editor_absoluteX="148dp"
