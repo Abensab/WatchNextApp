@@ -8,7 +8,7 @@
     tools:context=".FeedbackAportadoActivity">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewStatic"
         android:layout_width="wrap_content"
         android:layout_height="123dp"
         android:text="Notificar Incidencia"
@@ -32,7 +32,7 @@
         tools:layout_editor_absoluteY="168dp" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textViewNombreTareaReportIncidencia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -47,7 +47,7 @@
         tools:layout_editor_absoluteY="195dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonEnviarIncidencia"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -61,7 +61,7 @@
         tools:layout_editor_absoluteY="503dp" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imageViewMicro"
         android:layout_width="136dp"
         android:layout_height="110dp"
         android:layout_alignParentBottom="true"
@@ -70,7 +70,7 @@
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageViewRoundBorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -79,34 +79,33 @@
         app:srcCompat="@mipmap/ic_feedback_border" />
 
     <Switch
-        android:id="@+id/switch3"
+        android:id="@+id/switchTareaBloqueante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="92dp"
-        android:text="Tarea Bloqueante:  "
+        android:text="Tarea Bloqueante  "
         android:textAlignment="viewStart"
         android:textColor="?attr/actionModeSplitBackground"
         android:theme="@style/AppTheme"
         android:visibility="visible" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/imageViewPlay"
         android:layout_width="101dp"
         android:layout_height="113dp"
-        android:layout_alignStart="@+id/button2"
-        android:layout_alignTop="@+id/imageView5"
-        android:layout_marginTop="14dp"
+        android:layout_alignTop="@+id/imageViewMicro"
+        android:layout_centerHorizontal="true"
         android:theme="@style/AppTheme"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/buttonRemoveAudioRecord"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_above="@+id/imageView5"
-        android:layout_toEndOf="@+id/imageView4"
+        android:layout_above="@+id/imageViewRoundBorder"
+        android:layout_toEndOf="@+id/imageViewMicro"
         android:background="@android:drawable/ic_delete" />
 
     <ProgressBar
@@ -122,12 +121,11 @@
         tools:visibility="visible" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/imageViewPause"
         android:layout_width="101dp"
         android:layout_height="113dp"
-        android:layout_alignTop="@+id/imageView4"
+        android:layout_alignTop="@+id/imageViewMicro"
         android:layout_centerHorizontal="true"
         app:srcCompat="@android:drawable/ic_media_pause" />
-
 
 </RelativeLayout>

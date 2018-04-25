@@ -20,7 +20,8 @@
         <activity android:name=".AceptarTareaActivity" />
         <activity android:name=".TareaEnEjecucionActivity" />
         <activity android:name=".FeedbackAportadoActivity" />
-        <activity android:name=".VerDetallesActivity"></activity>
+        <activity android:name=".VerDetallesActivity" />
+        <activity android:name=".ReportarIncidenciaActivity"></activity>
     </application>
 
 </manifest>

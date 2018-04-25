@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/nombreTarea_textView_verDetalles"
         android:id="@+id/detallesTarea_textView"
-        android:text="Texto en formato html para darle formato"
+        android:text="Texto en html para darle formato"
         android:textSize="20sp"
         android:layout_margin="10dp"/>
 

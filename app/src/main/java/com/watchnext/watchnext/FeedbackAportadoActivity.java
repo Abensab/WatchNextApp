@@ -39,7 +39,7 @@ public class FeedbackAportadoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback_aportado);
+        setContentView(R.layout.activity_finalizar_tarea);
 
         // Get nombreTarea y codOperario
         // TODO - get operario, nombreTarea e IDTarea from intent
