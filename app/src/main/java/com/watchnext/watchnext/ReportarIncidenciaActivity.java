@@ -5,6 +5,24 @@ import android.os.Bundle;
 
 public class ReportarIncidenciaActivity extends AppCompatActivity {
 
+    // Atributos - id
+    /*
+     * (ALL)
+     * textViewStatic
+     * divider
+     *
+     * (USEFULL)
+     * textViewNombreTareaReportIncidencia
+     * buttonEnviarIncidencia
+     * imageViewMicro
+     * imageViewRoundBorder
+     * switchTareaBloqueante
+     * imageViewPlay
+     * buttonRemoveAudioRecord
+     * progressBar2
+     * imageViewPause
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
