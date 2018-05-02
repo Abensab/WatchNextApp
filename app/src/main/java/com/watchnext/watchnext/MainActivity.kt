@@ -8,11 +8,19 @@ import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 import android.util.Log
+import java.io.BufferedReader
+import java.io.IOException
+
+import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
 
+    var URL_SOLICITAR_TAREA:String = "https://us-central1-wane-3630f.cloudfunctions.net/solicitarDatosTarea?id=204"
+    var URL_SALUDAR:String= "https://us-central1-wane-3630f.cloudfunctions.net/saludar"
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        doGet(URL_SOLICITAR_TAREA)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -38,11 +46,13 @@ class MainActivity : AppCompatActivity() {
                                 Log.w("SUCCESSFUL", "documento: " + document.get("id") + ", pass: " + document.get("pass"))
                                 successDialogBuilder.setTitle("Bienvienid@ " + editText_name.text)
                                 successDialogBuilder.setMessage("Gracias por usar WatchNext")
+                                //TODO: Si el operario está conectado le redirijo con su tarea
+
+                                //TODO: Si no, lo mando así  a pelo
                                 successDialogBuilder.setPositiveButton("OK", DialogInterface.OnClickListener { button, whichButton ->
                                     val intent = Intent(this, AceptarTareaActivity::class.java)
                                     intent.putExtra("operario", CodOperario)
                                     startActivity(intent, Bundle())
-
                                 })
                                 val b = successDialogBuilder.create()
                                 b.show()
@@ -78,5 +88,30 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+    private fun doGet(url: String){
+        val thread = Thread(Runnable {
+            try {
+                var message:String =""
+                val response = try {
+                    var buffer =  URL(url).openStream().bufferedReader()
+                    var line= buffer.readLine()
+
+                    while (line!=null){
+                        message +=line
+                        line=  buffer.readLine()
+                    }
+                }catch (e: IOException) {
+                    "Error with ${e.message}."
+                }
+                Log.w("GET RESPONSE:", message.toString())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
+
+        thread.start()
+
+    }
+
 }
 
