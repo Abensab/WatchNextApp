@@ -7,8 +7,8 @@ import android.support.v7.app.AlertDialog
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import android.opengl.Matrix
 import android.util.Log
-import java.io.BufferedReader
 import java.io.IOException
 
 import java.net.URL
@@ -26,7 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         val db = FirebaseFirestore.getInstance()//referencia de firestore
         val operariosRef = db.collection("operarios")
+        val operariosConectadosRef = db.collection("operariosConectados")
         val operarios = operariosRef.get()
+        val operariosConectados = operariosConectadosRef.get()
         val alertDialogBuilder = AlertDialog.Builder(this)
 
         button_login.setOnClickListener {
@@ -38,8 +40,8 @@ class MainActivity : AppCompatActivity() {
                 operarios.addOnSuccessListener { snapshot ->
                     for (document in snapshot.documents) {
                         Log.w("ITERACION", "documento: " + document.get("id") + ", pass: " + document.get("pass"))
-                        Log.w("COMPROBANDO", "documento: " + editText_name.text.toString().equals(document.get("id").toString()) +
-                                ", pass: " + editText_passwd.text.toString().equals(document.get("pass").toString()))
+                        Log.w("COMPROBANDO", "documento: " + editText_name.text.toString().equals(document.get("id").toString()) +", pass: " + editText_passwd.text.toString().equals(document.get("pass").toString())
+                                )
                         if (editText_name.text.toString().equals(document.get("id").toString())) {
                             if (editText_passwd.text.toString().equals(document.get("pass").toString())) {
                                 val successDialogBuilder = AlertDialog.Builder(this)
@@ -47,17 +49,41 @@ class MainActivity : AppCompatActivity() {
                                 successDialogBuilder.setTitle("Bienvienid@ " + editText_name.text)
                                 successDialogBuilder.setMessage("Gracias por usar WatchNext")
                                 //TODO: Si el operario está conectado le redirijo con su tarea
+                                operariosConectados.addOnSuccessListener { snap->
+                                    var esta=false
+                                    for (doc in snap.documents) {
+                                        if (doc.get("id").toString().equals(editText_name.text.toString())) { //El operario está en la BBDD
+                                            esta = true
+                                            Log.w("SUCCESSFUL", "operario encontrado en OperariosConectados: " + doc.get("id") + ", pass: " + document.get("pass"))
+                                            var listaTareas = doc.get("tareas") as List<Number>
+                                            if (doc.get("conectado") == false) {
+                                                operariosConectadosRef.document(doc.get("id").toString()).update(mapOf("conectado" to true))
+                                            }
+                                            if (listaTareas.size > 0) {//Tiene tareas, obtener los datos de la misma
+                                                var respuesta = doGet(URL_SOLICITAR_TAREA)
+                                                //var tarea=Tarea()//TODO poner método que pasado un String genere la tarea
+                                            }//No tiene tareas ya la pedirá la siguiente ventana
 
+                                        }
+                                    }
+                                    if(!esta){
+                                        //El operario no está en la colección hay que añadirlo
+                                        var operario = Operario(document.get("id") as Number, true, document.get("etiquetas") as ArrayList<String>, ArrayList<Number>())
+                                        operariosConectadosRef.document(operario.id.toString()).set(operario.toStringMap())
+                                    }
+                                    successDialogBuilder.setPositiveButton("OK", DialogInterface.OnClickListener { button, whichButton ->
+                                        val intent = Intent(this, AceptarTareaActivity::class.java)
+                                        intent.putExtra("operario", CodOperario)
+                                        startActivity(intent, Bundle())
+                                    })
+                                    val b = successDialogBuilder.create()
+                                    b.show()
+                                    codigo = 2
+
+                                }
                                 //TODO: Si no, lo mando así  a pelo
-                                successDialogBuilder.setPositiveButton("OK", DialogInterface.OnClickListener { button, whichButton ->
-                                    val intent = Intent(this, AceptarTareaActivity::class.java)
-                                    intent.putExtra("operario", CodOperario)
-                                    startActivity(intent, Bundle())
-                                })
-                                val b = successDialogBuilder.create()
-                                b.show()
-                                codigo = 2
-                                break
+                                if(codigo==2)
+                                    break
                             }
                             codigo = 1
                             break
@@ -88,29 +114,29 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-    private fun doGet(url: String){
+    private fun doGet(url: String) : String {
+        var message = ""
         val thread = Thread(Runnable {
             try {
-                var message:String =""
-                val response = try {
-                    var buffer =  URL(url).openStream().bufferedReader()
-                    var line= buffer.readLine()
+                try {
+                    var buffer = URL(url).openStream().bufferedReader()
+                    var line = buffer.readLine()
 
-                    while (line!=null){
-                        message +=line
-                        line=  buffer.readLine()
+                    while (line != null) {
+                        message += line
+                        line = buffer.readLine()
                     }
-                }catch (e: IOException) {
+                } catch (e: IOException) {
                     "Error with ${e.message}."
                 }
                 Log.w("GET RESPONSE:", message.toString())
-            } catch (e: Exception) {
-                e.printStackTrace()
+            }catch (e: Exception) {
+                "Error with Thread: ${e.message}."
             }
         })
 
         thread.start()
-
+        return ""
     }
 
 }

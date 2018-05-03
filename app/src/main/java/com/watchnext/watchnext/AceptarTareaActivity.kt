@@ -57,7 +57,7 @@ class AceptarTareaActivity : AppCompatActivity() {
         var operario:DocumentSnapshot
         var tarea:DocumentSnapshot
         var db = FirebaseFirestore.getInstance()//referencia de firestore
-        var operariosAsignados =db.collection("asignadas").get()
+        var operariosConectados =db.collection("operariosConectados").get()
         val operariosRef = db.collection("operarios")
         val operarios = operariosRef.get()
         var encontrado=false
@@ -67,19 +67,19 @@ class AceptarTareaActivity : AppCompatActivity() {
         var doc :DocumentSnapshot
         var tar :DocumentSnapshot
         logout_button.setOnClickListener({
-            FirebaseFirestore.getInstance().collection("asignadas").document(CodOperario.toString()).update("conectado" , false)
+            FirebaseFirestore.getInstance().collection("operariosConectados").document(CodOperario.toString()).update("conectado" , false)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent, Bundle())
         })
-        var queryOperario =db.collection("asignadas").whereEqualTo("id",CodOperario).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
+        var queryOperario =db.collection("operariosConectados").whereEqualTo("id",CodOperario).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
             Log.w("ATA-Tarea", "tarea: " +task.getResult().isEmpty())
 
             if(!task.getResult().isEmpty()){
-                FirebaseFirestore.getInstance().collection("asignadas").document(CodOperario.toString()).update("conectado" , true)
+                FirebaseFirestore.getInstance().collection("operariosConectados").document(CodOperario.toString()).update("conectado" , true)
                 doc=task.getResult().documents.get(0) as DocumentSnapshot
                 Log.w("ATA-QUERY-OP", "id documento: " + doc.get("id"))
 
-                db.collection("asignadas").document(CodOperario.toString()).collection("Tareas").whereEqualTo("pausada",false).whereEqualTo("h_fin",0).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
+                db.collection("operariosConectados").document(CodOperario.toString()).collection("Tareas").whereEqualTo("pausada",false).whereEqualTo("h_fin",0).get().addOnCompleteListener({ task: Task<QuerySnapshot> ->
                     Log.w("ATA-QUERY-Tarea", "Tamaño coleccion tareas: " + task.getResult().documents.size)
                     if (!task.getResult().documents.isEmpty()) {
                         encontrado = true
@@ -96,7 +96,7 @@ class AceptarTareaActivity : AppCompatActivity() {
                     override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                         Log.w("ATA-QUERY-Tarea", "Cambio " + p0?.toString())
                         var numTareas = 0
-                        db.collection("asignadas").document(CodOperario.toString()).collection("Tareas").whereEqualTo("pausada",false).whereEqualTo("h_fin",0).get().addOnCompleteListener({task:Task<QuerySnapshot> ->
+                        db.collection("operariosConectado").document(CodOperario.toString()).collection("Tareas").whereEqualTo("pausada",false).whereEqualTo("h_fin",0).get().addOnCompleteListener({task:Task<QuerySnapshot> ->
                             Log.w("ATA-QUERY-Tarea", "Tamaño coleccion tareas: " + task.getResult().documents.size)
                             if(task.getResult().documents.size>numTareas) {
                                 mostrarTarea(task.result.documents.get(0) as DocumentSnapshot, doc)
@@ -107,7 +107,7 @@ class AceptarTareaActivity : AppCompatActivity() {
                         })
                     }
                 }
-            db.collection("asignadas").document(CodOperario.toString()).addSnapshotListener(childEventListener)
+            db.collection("operariosConectados").document(CodOperario.toString()).addSnapshotListener(childEventListener)
         }})
         if(!encontrado) {
             var tareasSinAsignarRef = db.collection("sinAsignar")
@@ -119,14 +119,14 @@ class AceptarTareaActivity : AppCompatActivity() {
                     if (etiquetas.size == 0 && document.get("asignable") as Boolean) { // Esto es porque el tipo de dato en Firebase es "Boolean"
                         //TODO consultar los operarios que tienen etiquetas con las faenas que tienen etiqueta
                         Log.w("ATA-MODIFICAMOS", "Documento: " + document.get("id") + " Modificamos con exito el valor?" + tareasSinAsignarRef.document(document.get("id").toString()).update("asignable", false))
-                        operarios.addOnSuccessListener { snapshot ->
-                            for (doc in snapshot.documents) {
+                        operarios.addOnSuccessListener { snap ->
+                            for (doc in snap.documents) {
                                 Log.w("ATA-MODIFICAMOS", "Documento: " +CodOperario.javaClass +", " + doc.get("id").javaClass +", " + (CodOperario==(doc.get("id"))))
                                 if (CodOperario.toString().equals(doc.get("id").toString())) {
-                                    var operariosAsignadosRef =db.collection("asignadas")
-                                    var operario = Operario(doc.get("id") as Number, true, doc.get("etiquetas") as ArrayList<String>, db.collection("operarios").document(CodOperario.toString()).collection("Tareas"))
-                                    operariosAsignadosRef.document(operario.id.toString()).set(operario.toStringMap())
-                                    operariosAsignadosRef.document(operario.id.toString()).update(operario.toArrayMap())
+                                    var operariosConectadosRef =db.collection("operariosConectados")
+                                    var tareas = doc.get("tareas") as ArrayList<Number>
+                                    tareas.add(document.get("id") as Number)
+                                    operariosConectadosRef.document(doc.id).update(mapOf("tareas" to tareas))
                                     mostrarTarea(document, doc)
                                     break
                                 } else {
@@ -150,7 +150,7 @@ class AceptarTareaActivity : AppCompatActivity() {
         val objetoIntent : Intent =intent
         var CodOperario = objetoIntent.getStringExtra("operario")
         var db = FirebaseFirestore.getInstance()//referencia de firestore
-        var operariosAsignadosRef =db.collection("asignadas")
+        var operariosAsignadosRef =db.collection("operariosConectados")
         var tarea = Tarea(ta)
         nombreTarea_textView.text = tarea.titulo.toString()
         duracionTarea_textView.text = tarea.descripcion
