@@ -72,10 +72,10 @@
 
     <ImageView
         android:id="@+id/imageViewDissatisfiedBorder"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="260dp"
-        android:layout_marginStart="-4dp"
+        android:layout_marginStart="0dp"
         android:visibility="visible"
         app:srcCompat="@mipmap/ic_feedback_border" />
 
@@ -89,7 +89,7 @@
 
     <ImageView
         android:id="@+id/imageViewNeutralBorder"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="260dp"
@@ -106,11 +106,11 @@
 
     <ImageView
         android:id="@+id/imageViewSatisfiedBorder"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="260dp"
-        android:layout_marginEnd="-6dp"
+        android:layout_marginEnd="0dp"
         app:srcCompat="@mipmap/ic_feedback_border" />
 
 </RelativeLayout>
