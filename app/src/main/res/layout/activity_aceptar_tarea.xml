@@ -75,5 +75,15 @@
         android:textColor="@android:color/holo_red_dark"
         android:background="@android:color/transparent"/>
 
+    <ProgressBar
+        android:id="@+id/loadingPanel"
+        android:layout_width="94dp"
+        android:layout_height="99dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="168dp"
+        android:gravity="center"
+        android:indeterminate="true" />
+
 
 </RelativeLayout>

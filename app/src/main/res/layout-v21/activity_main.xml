@@ -72,4 +72,12 @@
         android:textColor="#64a6a2"
         android:textSize="16dp"/>
 
+    <ProgressBar
+        android:id="@+id/loadingPanel"
+        android:layout_width="94dp"
+        android:layout_height="99dp"
+        android:layout_alignTop="@+id/editText_name"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:indeterminate="true" />
 </RelativeLayout>
