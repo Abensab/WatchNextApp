@@ -117,7 +117,7 @@ class AceptarTareaActivity : AppCompatActivity() {
             operariosAsignadosRef.document(op.get("id").toString()).collection("Tareas").document(tarea.id.toString()).update(h_inicio)
             val intent = Intent(this, TareaEnEjecucionActivity::class.java)
             intent.putExtra("operario", CodOperario.toString())
-            intent.putExtra("IDtarea", tarea)
+            intent.putExtra("IDtarea", tarea.id)
             startActivity(intent, Bundle())
             finish()
         }

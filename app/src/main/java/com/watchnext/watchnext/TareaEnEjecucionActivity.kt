@@ -44,9 +44,12 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
 //        }
 //
 
-        imageButton_verDetalles.isClickable=false
+        imageButton_verDetalles.isClickable=true
         imageButton_notificarIncidencia.isClickable=false
         imageButton_verDetalles.visibility= View.VISIBLE
+        imageButton_notificarIncidencia.visibility= View.INVISIBLE
+        textView_Incidencia.visibility=View.INVISIBLE
+
 
         imageButton_finalizarTarea.setOnClickListener {
             var h_fin = mapOf("h_fin" to Timestamp(System.currentTimeMillis()).nanos )
@@ -57,6 +60,13 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
             intent.putExtra("tarea", tarea.toString())
             startActivity(intent, Bundle())
             finish()
+        }
+
+        imageButton_verDetalles.setOnClickListener {
+            val intent = Intent(this, VerDetallesActivity::class.java)
+            intent.putExtra("nombreTarea", nombreTarea_textView_EnEjecucion.text)
+            intent.putExtra("descripTarea", tarea.getString("descripcion"))
+            startActivity(intent, Bundle())
         }
         displayTime()
     }
