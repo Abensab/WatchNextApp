@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity() {
             editText_name.visibility= View.VISIBLE
             b.show()
         }
+
     }
     private fun ejecutarRedireccion(tieneTarea:Boolean, codOperario: String, tarea: Tarea, successDialogBuilder: AlertDialog.Builder) {
         if(tieneTarea){
