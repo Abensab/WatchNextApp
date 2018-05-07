@@ -64,6 +64,7 @@ class AceptarTareaActivity : AppCompatActivity() {
             FirebaseFirestore.getInstance().collection("operariosConectados").document(CodOperario.toString()).update("conectado" , false)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent, Bundle())
+            finish()
         })
         var tareasSinAsignarRef = db.collection("sinAsignar")
         var tareasSinAsignar = tareasSinAsignarRef.get()

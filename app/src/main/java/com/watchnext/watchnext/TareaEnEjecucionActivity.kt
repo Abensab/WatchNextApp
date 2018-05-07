@@ -47,6 +47,8 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
         imageButton_verDetalles.isClickable=true
         imageButton_notificarIncidencia.isClickable=false
         imageButton_verDetalles.visibility= View.VISIBLE
+
+        // Botón de reportar incidencia
         imageButton_notificarIncidencia.visibility= View.INVISIBLE
         textView_Incidencia.visibility=View.INVISIBLE
 

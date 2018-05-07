@@ -186,7 +186,6 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, AceptarTareaActivity::class.java)
                 intent.putExtra("operario", codOperario)
                 startActivity(intent, Bundle())
-
             })
         }
         val b = successDialogBuilder.create()

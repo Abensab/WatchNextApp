@@ -92,6 +92,7 @@ class FeedbackAportadoActivity : AppCompatActivity() {
         val intent = Intent(this, AceptarTareaActivity::class.java)
         intent.putExtra("operario", "" + codOperario)
         startActivity(intent, Bundle())
+        finish()
     }
 
     companion object {
