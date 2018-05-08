@@ -3,19 +3,10 @@ package com.watchnext.watchnext
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.solver.widgets.Snapshot
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.view.Display
 import android.view.View
-import android.widget.ImageButton
-import android.widget.TextView
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.activity_aceptar_tarea.*
 import kotlinx.android.synthetic.main.activity_tarea_en_ejecucion.*
 import org.json.JSONObject
 import java.sql.Timestamp
@@ -25,8 +16,6 @@ import java.util.Calendar
 class TareaEnEjecucionActivity : AppCompatActivity() {
 
     // private Tarea tarea; // Obtener los datos de la tarea desde la vista AceptarTarea
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -58,7 +47,6 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
             tareaRef.update(h_fin)
             val intent = Intent(this, FeedbackAportadoActivity::class.java)
             intent.putExtra("operario", CodOperario)
-            intent.putExtra("nombreTarea", nombreTarea_textView_EnEjecucion.text)
             intent.putExtra("tarea", tarea.toString())
             startActivity(intent, Bundle())
             finish()

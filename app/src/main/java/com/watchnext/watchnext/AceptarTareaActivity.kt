@@ -6,14 +6,24 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_aceptar_tarea.*
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import org.json.JSONObject
+import java.io.IOException
+import java.net.URL
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class AceptarTareaActivity : AppCompatActivity() {
+
+    var URL_ASIGNAR_TAREA:String = " https://us-central1-wane-3630f.cloudfunctions.net/asignarTarea?" //Devuelve el id de la primera tarea que tiene asignada o un texto para decir que no tiene
+    var URL_SOLICITAR_TAREA:String = "https://us-central1-wane-3630f.cloudfunctions.net/solicitarDatosTarea3?" //Devuelve el id de la primera tarea que tiene asignada o un texto para decir que no tiene
+    internal val Background = newFixedThreadPoolContext(3, "bg")
+
+    var respuesta = ""
 
     /* Por defecto, el botón de 'Aceptar tarea' está inhabilitado,
      * y en nombre tarea y duración tarea se muestran los siguientes mensajes:
@@ -24,9 +34,10 @@ class AceptarTareaActivity : AppCompatActivity() {
      * y se activa el botón de 'Aceptar tarea'
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-//        loadingPanel.visibility = View.VISIBLE
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aceptar_tarea)
+        loadingPanelAT.visibility = View.INVISIBLE
         button_aceptarTarea.isClickable=false
         button_aceptarTarea.visibility= View.INVISIBLE
         val objetoIntent : Intent =intent
@@ -48,25 +59,76 @@ class AceptarTareaActivity : AppCompatActivity() {
 
     private fun getTarea(CodOperario:Number) {
 
-        var operario:DocumentSnapshot
-        var tarea:DocumentSnapshot
+        loadingPanelAT.visibility = View.VISIBLE
         var db = FirebaseFirestore.getInstance()//referencia de firestore
-        var operariosConectados =db.collection("operariosConectados").get()
+        var operariosConectadosRef =db.collection("operariosConectados")
         val operariosRef = db.collection("operarios")
         val operarios = operariosRef.get()
-        var encontrado=false
 
-        var firebaseFirestore :FirebaseFirestoreException
-
-        var doc :DocumentSnapshot
-        var tar :DocumentSnapshot
         logout_button.setOnClickListener({
             FirebaseFirestore.getInstance().collection("operariosConectados").document(CodOperario.toString()).update("conectado" , false)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent, Bundle())
-            finish()
         })
-        var tareasSinAsignarRef = db.collection("sinAsignar")
+
+        //TODO Empezamos por aqui...
+        val job = launch(Background) {
+           doGet(URL_ASIGNAR_TAREA + "id=" + CodOperario)
+        }
+        while (job.isActive) {}//TODO: esto esta feo
+        try{    //Tarea asignada correctamente
+            Log.i("TRY" , "mensaje " + respuesta)
+            if(respuesta.contains("type")){
+                if(JSONObject(respuesta).get("type")!=null) {
+                    Log.i("Mensaje", respuesta.toString())
+                    val job2 = launch(Background) {
+                        doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
+                    }
+                    while (job2.isActive) {
+                    }//TODO: esto esta feo
+                    job2.invokeOnCompletion {
+                        visualizarTarea(JSONObject(respuesta), CodOperario)
+                    }
+                }
+            }else{
+                Log.i("NOTICE" , "No se ha devuleto ninguna tarea " + respuesta)
+                if(JSONObject(respuesta).get("error").equals("No hay tareas")){
+                    operariosConectadosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                        loadingPanelAT.visibility = View.VISIBLE
+                        if(firebaseFirestoreException!=null) {
+                            Log.e("Listen failed: ",firebaseFirestoreException.toString())
+                        }
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Log.w("Current data ", documentSnapshot.getData().toString())
+                            val job3 = launch(Background) {
+                                doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
+                            }
+                            while (job3.isActive) {}//TODO: esto esta feo
+                            job3.invokeOnCompletion {
+                                if (!respuesta.contentEquals("error")) {
+                                    Log.e("WTF_Entra", respuesta)
+                                    System.out.println("Respuesta: " + respuesta)
+//                                    var x = JSONObject(respuesta)
+//                                    visualizarTarea(x, CodOperario)//TODO: aqui explota
+                                }
+                            }
+
+                        } else {
+                            System.out.print("Current data: null")
+                        }
+
+                    }
+                }
+            }
+        }catch (e: Exception){              //No hay tareas -> Pongo escuchador
+            Log.e("ERROR", e.printStackTrace().toString())
+        }
+
+
+
+
+        //TODO: Esto de aqui abajo debería sobrar....
+       /* var tareasSinAsignarRef = db.collection("sinAsignar")
         var tareasSinAsignar = tareasSinAsignarRef.get()
         tareasSinAsignar.addOnSuccessListener { snapshot ->
             for (document in snapshot.documents) {
@@ -95,30 +157,29 @@ class AceptarTareaActivity : AppCompatActivity() {
                 } else {
                     nombreTarea_textView.text = "En este momento no hay tareas disponibles"
                 }
-
             }
-        }
+        }*/
     }
 
-    private fun mostrarTarea(ta :DocumentSnapshot, op :DocumentSnapshot){
-        //TODO arreglar este codio para que pueda almacenar bien las tareas de un operario ya en funcionamiento
+    private fun mostrarTarea(ta :Tarea, op : Number){
+        //TODO arreglar este codio para que acepte la tarea mediante una función en firebase
         val objetoIntent : Intent =intent
         var CodOperario = objetoIntent.getStringExtra("operario")
         var db = FirebaseFirestore.getInstance()//referencia de firestore
         var operariosAsignadosRef =db.collection("operariosConectados")
-        var tarea = Tarea(ta)
+        var tareasAsignadasRef =db.collection("asignadas")
+        loadingPanelAT.visibility = View.INVISIBLE
+        var tarea = ta
         nombreTarea_textView.text = tarea.titulo.toString()
         duracionTarea_textView.text = tarea.descripcion
         button_aceptarTarea.setActivated(true)
         button_aceptarTarea.setOnClickListener {
-            operariosAsignadosRef.document(op.get("id").toString()).collection("Tareas").document(tarea.id.toString()).set(tarea.toMap())
-            operariosAsignadosRef.document(op.get("id").toString()).collection("Tareas").document(tarea.id.toString()).update(tarea.toArrayMap())
             var h_inicio = mapOf("h_inicio" to Timestamp(System.currentTimeMillis()).nanos)
             Log.w("ATA-timestamp", "timestamp: "+h_inicio.get("h_inicio"))
-            operariosAsignadosRef.document(op.get("id").toString()).collection("Tareas").document(tarea.id.toString()).update(h_inicio)
+            tareasAsignadasRef.document(tarea.id.toString()).update(h_inicio)
             val intent = Intent(this, TareaEnEjecucionActivity::class.java)
             intent.putExtra("operario", CodOperario.toString())
-            intent.putExtra("IDtarea", tarea.id)
+            intent.putExtra("tarea", tarea.toJSONObject().toString())
             startActivity(intent, Bundle())
             finish()
         }
@@ -133,5 +194,40 @@ class AceptarTareaActivity : AppCompatActivity() {
         alertDialogBuilder.setMessage(errorMessage)
         var a = alertDialogBuilder.create()
         a.show()
+    }
+    private fun doGet(url: String) {
+        var message = ""
+        try {
+            try {
+                var buffer = URL(url).openStream().bufferedReader()
+                var line = buffer.readLine()
+
+                while (line != null) {
+                    message += line
+                    line = buffer.readLine()
+                }
+            } catch (e: IOException) {
+                Log.e("Error", "Error with " + { e.message })
+            }
+            Log.w("GET RESPONSE:", message)
+        } catch (e: Exception) {
+            Log.e("Error", "Error with Thread: " + { e.message })
+        }
+        Log.w("GET RESPONSE:", message)
+        respuesta = message
+    }
+
+    private fun visualizarTarea(res :JSONObject, codOperario : Number){
+        try{
+            var tarea = res.get("tarea") as JSONObject
+            if(tarea!=null){
+                Log.i("TAREA" , tarea.toString())
+                mostrarTarea(Tarea(tarea),codOperario)
+            }else{
+                Log.e("WTF-ERROR" , "La respuesta no tiene respuesta" + tarea.toString())
+            }
+        }catch (e: Exception){
+            Log.e("ERROR" , "No se ha devuleto ninguna tarea: " + res.get("error"))
+        }
     }
 }

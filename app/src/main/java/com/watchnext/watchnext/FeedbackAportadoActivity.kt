@@ -3,23 +3,28 @@ package com.watchnext.watchnext
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.annotation.UiThread
+import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_finalizar_tarea.*
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import org.json.JSONObject
+import java.io.IOException
+import java.net.URL
 
 class FeedbackAportadoActivity : AppCompatActivity() {
 
-    private var dissatisfiedImage: ImageView? = null
-    private var dissatisfiedImageBorder: ImageView? = null
-    private var neutralImage: ImageView? = null
-    private var neutralImageBorder: ImageView? = null
-    private var satisfiedImage: ImageView? = null
-    private var satisfiedImageBorder: ImageView? = null
-
-    private var tareaTextView: TextView? = null
     private var satisfaccionButton: Button? = null
-
+    var respuesta = ""
+    var URL_FINALIZAR_TAREA:String = "https://us-central1-wane-3630f.cloudfunctions.net/finalizarTarea?" //Devuelve el id de la primera tarea que tiene asignada o un texto para decir que no tiene
+    var tarea = JSONObject()
+    var idOperario = ""
+    internal val Background = newFixedThreadPoolContext(2, "bg")
     // TODO - recibir nombre tarea desde actividad anterior
 
     /* Niveles de satisfacción:
@@ -33,12 +38,17 @@ class FeedbackAportadoActivity : AppCompatActivity() {
     private var nivelSatisfaccion = NEUTRAL
 
     // id operario
-    private val codOperario = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_finalizar_tarea)
+        val objetoIntent: Intent = intent
+        tarea = JSONObject(objetoIntent.getStringExtra("tarea"))
+        idOperario = objetoIntent.getStringExtra("operario")
 
+//        setContentView(R.layout.activity_finalizar_tarea)
+        loadingPanel.visibility = View.INVISIBLE
         // Get nombreTarea y codOperario
         // TODO - get operario, nombreTarea e IDTarea from intent
         /*
@@ -49,55 +59,83 @@ class FeedbackAportadoActivity : AppCompatActivity() {
         // TODO - set tareaTextView = nombreTarea
 
         // Get resources from R.class
-        dissatisfiedImage = findViewById(R.id.imageViewDissatisfied)
-        dissatisfiedImageBorder = findViewById(R.id.imageViewDissatisfiedBorder)
-        neutralImage = findViewById(R.id.imageViewNeutral)
-        neutralImageBorder = findViewById(R.id.imageViewNeutralBorder)
-        satisfiedImage = findViewById(R.id.imageViewSatisfied)
-        satisfiedImageBorder = findViewById(R.id.imageViewSatisfiedBorder)
-        tareaTextView = findViewById(R.id.tareaTextView)
+
         satisfaccionButton = findViewById(R.id.buttonEnviarNivelSatisfaccion)
 
         // Set image borders' visibility
-        dissatisfiedImageBorder!!.visibility = View.INVISIBLE
-        satisfiedImageBorder!!.visibility = View.INVISIBLE
+        imageViewDissatisfiedBorder.visibility = View.INVISIBLE
+        imageViewSatisfiedBorder.visibility = View.INVISIBLE
 
         // Dissatisfied image selected
-        dissatisfiedImage!!.setOnClickListener {
+        imageViewDissatisfied.setOnClickListener {
             nivelSatisfaccion = DISSATISFIED
-            dissatisfiedImageBorder!!.visibility = View.VISIBLE
-            satisfiedImageBorder!!.visibility = View.INVISIBLE
-            neutralImageBorder!!.visibility = View.INVISIBLE
+            imageViewDissatisfiedBorder.visibility = View.VISIBLE
+            imageViewSatisfiedBorder.visibility = View.INVISIBLE
+            imageViewNeutralBorder.visibility = View.INVISIBLE
         }
 
         // Satisfied image selected
-        satisfiedImage!!.setOnClickListener {
+        imageViewSatisfied.setOnClickListener {
             nivelSatisfaccion = SATISFIED
-            dissatisfiedImageBorder!!.visibility = View.INVISIBLE
-            satisfiedImageBorder!!.visibility = View.VISIBLE
-            neutralImageBorder!!.visibility = View.INVISIBLE
+            imageViewDissatisfiedBorder.visibility = View.INVISIBLE
+            imageViewSatisfiedBorder.visibility = View.VISIBLE
+            imageViewNeutralBorder.visibility = View.INVISIBLE
         }
 
         // Neutral image selected
-        neutralImage!!.setOnClickListener {
+        imageViewNeutral.setOnClickListener {
             nivelSatisfaccion = NEUTRAL
-            dissatisfiedImageBorder!!.visibility = View.INVISIBLE
-            satisfiedImageBorder!!.visibility = View.INVISIBLE
-            neutralImageBorder!!.visibility = View.VISIBLE
+            imageViewDissatisfiedBorder.visibility = View.INVISIBLE
+            tareaTextView.visibility = View.INVISIBLE
+            imageViewNeutralBorder.visibility = View.VISIBLE
         }
     }
 
     fun satisfactionButtonClicked(view: View) {
         // TODO - enviar nivel de satisfacción a firebase usando codOperario
-        val intent = Intent(this, AceptarTareaActivity::class.java)
-        intent.putExtra("operario", "" + codOperario)
-        startActivity(intent, Bundle())
-        finish()
+        var intento = this
+        doAsync {
+            doGet(URL_FINALIZAR_TAREA + "idOperario=" + idOperario+"&idTarea=" + tarea.get("id")+"&satisfaccion="+nivelSatisfaccion)
+            uiThread {
+                val intent = Intent(intento, AceptarTareaActivity::class.java)
+                intent.putExtra("operario", "" + idOperario)
+                startActivity(intent, Bundle())
+                finish()
+            }
+        }
+        loadingPanel.visibility = View.VISIBLE
+        imageViewNeutral.visibility=View.INVISIBLE
+        imageViewDissatisfied.visibility=View.INVISIBLE
+        imageViewSatisfied.visibility=View.INVISIBLE
+        imageViewDissatisfiedBorder.visibility = View.INVISIBLE
+        imageViewSatisfiedBorder.visibility = View.INVISIBLE
+        imageViewNeutralBorder.visibility = View.INVISIBLE
     }
 
     companion object {
         private val DISSATISFIED = -1
         private val NEUTRAL = 0
         private val SATISFIED = 1
+    }
+    private fun doGet(url: String) {
+        var message = ""
+        try {
+            try {
+                var buffer = URL(url).openStream().bufferedReader()
+                var line = buffer.readLine()
+
+                while (line != null) {
+                    message += line
+                    line = buffer.readLine()
+                }
+            } catch (e: IOException) {
+                Log.e("Error" ,"Error with "+ {e.message})
+            }
+            Log.w("GET RESPONSE:", message.toString())
+        }catch (e: Exception) {
+            Log.e("Error" ,"Error with Thread: "+{e.message})
+        }
+        Log.w("GET RESPONSE:", message.toString())
+        respuesta=message
     }
 }

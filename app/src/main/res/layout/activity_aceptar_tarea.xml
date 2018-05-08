@@ -76,7 +76,7 @@
         android:background="@android:color/transparent"/>
 
     <ProgressBar
-        android:id="@+id/loadingPanel"
+        android:id="@+id/loadingPanelAT"
         android:layout_width="94dp"
         android:layout_height="99dp"
         android:layout_alignParentBottom="true"

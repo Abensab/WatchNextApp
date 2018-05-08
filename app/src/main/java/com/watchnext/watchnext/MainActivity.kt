@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
-import android.util.JsonWriter
 import android.util.Log
 import android.view.View
 import kotlinx.coroutines.experimental.launch
@@ -15,18 +14,15 @@ import kotlinx.coroutines.experimental.newFixedThreadPoolContext
 import org.json.JSONObject
 
 import java.io.IOException
-import java.lang.NumberFormatException
-import java.lang.ref.Reference
 
 import java.net.URL
-import java.text.NumberFormat
 
 
 class MainActivity : AppCompatActivity() {
 
     internal val Background = newFixedThreadPoolContext(2, "bg")
     var URL_SOLICITAR_TAREA:String = "https://us-central1-wane-3630f.cloudfunctions.net/solicitarDatosTarea3?" //Devuelve el id de la primera tarea que tiene asignada o un texto para decir que no tiene
-    var URL_SALUDAR:String= "https://us-central1-wane-3630f.cloudfunctions.net/saludar"
+
     var respuesta = ""
 
 
@@ -40,9 +36,6 @@ class MainActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()//referencia de firestore
         val operariosRef = db.collection("operarios")
         val operariosConectadosRef = db.collection("operariosConectados")
-        val operarios = operariosRef.get()
-        val operariosConectados = operariosConectadosRef.get()
-
 
         button_login.setOnClickListener {
             loadingPanel.visibility = View.VISIBLE
@@ -63,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                         if(operario.exists()) {
                             Log.w("QUERY", "Documento: " + operario.get("id"))
                             if (editText_passwd.text.toString().equals(operario.get("pass").toString())) {
+                                operariosConectadosRef.document(editText_name.text.toString()).update(mapOf( "conectado" to true ))
                                 Log.w("QUERY", "Password: " + operario.get("pass"))
                                 Log.w("SUCCESSFUL", "documento: " + operario.get("id") + ", pass: " + operario.get("pass"))
                                 successDialogBuilder.setTitle("Bienvienid@ " + editText_name.text)
@@ -81,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                                                 Log.w("NO TAREA FOUND", "No hay tareas disponibles " + respuesta)
                                                 ejecutarRedireccion(false, operarioConectado.get("id").toString(), Tarea(), successDialogBuilder)
                                             } else {
-                                                var tarea = Tarea(JSONObject(respuesta))
+                                                var tarea = Tarea(JSONObject(respuesta).get("tarea") as JSONObject)
                                                 Log.w("TAREA FOUND", "hay tarea disponible " + respuesta)
                                                 ejecutarRedireccion(true, operarioConectado.get("id").toString(), tarea, successDialogBuilder)
                                             }
@@ -127,9 +121,6 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
-
-
-
 
     private fun doGet(url: String) {
         var message = ""
