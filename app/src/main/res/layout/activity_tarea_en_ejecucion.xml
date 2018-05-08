@@ -7,8 +7,8 @@
     tools:context=".TareaEnEjecucionActivity"
     android:background="#eeeeee">
 
-    <TextView
-        android:id="@+id/time_textView_EnEjecucion"
+    <TextClock
+        android:id="@+id/time_textClock_EnEjecucion"
         android:layout_width="260dp"
         android:layout_height="90dp"
         android:layout_alignParentTop="true"

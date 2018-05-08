@@ -57,15 +57,8 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
             intent.putExtra("descrip", tarea.getString("descripcion"))
             startActivity(intent, Bundle())
         }
-        displayTime()
     }
 
-    private fun displayTime() {
-        val calendar = Calendar.getInstance()
-        val mdformat = SimpleDateFormat("HH:mm")
-        val strDate = mdformat.format(calendar.time)
-        time_textView_EnEjecucion.text = strDate
-    }
     override fun onBackPressed() {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("No puedes salir")

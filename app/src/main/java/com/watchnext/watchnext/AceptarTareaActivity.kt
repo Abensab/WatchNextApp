@@ -46,16 +46,9 @@ class AceptarTareaActivity : AppCompatActivity() {
         nombreTarea_textView.text = "Estamos buscando tareas disponibles..."
         duracionTarea_textView.text = "Tiempo de espera hasta recibir tarea: DESCONOCIDO"
         button_aceptarTarea.isActivated = false
-        displayTime()
         getTarea(CodOperario)
     }
 
-    private fun displayTime() {
-        val calendar = Calendar.getInstance()
-        val mdformat = SimpleDateFormat("HH:mm")
-        val strDate = mdformat.format(calendar.time)
-        time_textView.text = strDate
-    }
 
     private fun getTarea(CodOperario:Number) {
 
