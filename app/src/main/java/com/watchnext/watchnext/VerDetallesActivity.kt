@@ -7,14 +7,13 @@ import kotlinx.android.synthetic.main.activity_ver_detalles.*
 
 class VerDetallesActivity : AppCompatActivity() {
 
-    @Override
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ver_detalles)
 
         val objetoIntent: Intent = intent
-        var nombreTarea = objetoIntent.getStringExtra("nombreTarea")
-        var descripTarea = objetoIntent.getStringExtra("descripTarea")
+        var nombreTarea = objetoIntent.getStringExtra("titulo")
+        var descripTarea = objetoIntent.getStringExtra("descrip")
 
         nombreTarea_textView_verDetalles.text=nombreTarea
         detallesTarea_textView.text=descripTarea

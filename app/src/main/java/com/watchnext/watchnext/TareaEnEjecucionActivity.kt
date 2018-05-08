@@ -27,11 +27,10 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
         var db = FirebaseFirestore.getInstance()//referencia de firestore
         var tareaRef=db.collection("asignadas").document(tarea.get("id").toString())
         Log.w("TEE-TAREA",tarea.toString())
-//        db.collection("asignadas").document(IdTarea).get().addOnSuccessListener { snapshot ->
-//            nombreTarea_textView_EnEjecucion.text = snapshot.get("titulo") as String
-//            duracionTarea_textView_EnEjecucion.text = snapshot.get("descripcion") as String
-//        }
-//
+        nombreTarea_textView_EnEjecucion.text = tarea.getString("titulo")
+        duracionTarea_textView_EnEjecucion.text = tarea.getString("descripcion")
+
+
 
         imageButton_verDetalles.isClickable=true
         imageButton_notificarIncidencia.isClickable=false
@@ -54,8 +53,8 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
 
         imageButton_verDetalles.setOnClickListener {
             val intent = Intent(this, VerDetallesActivity::class.java)
-            intent.putExtra("nombreTarea", nombreTarea_textView_EnEjecucion.text)
-            intent.putExtra("descripTarea", tarea.getString("descripcion"))
+            intent.putExtra("titulo", tarea.getString("titulo"))
+            intent.putExtra("descrip", tarea.getString("descripcion"))
             startActivity(intent, Bundle())
         }
         displayTime()
