@@ -42,7 +42,7 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
 
 
         imageButton_finalizarTarea.setOnClickListener {
-            var h_fin = mapOf("h_fin" to Timestamp(System.currentTimeMillis()).nanos )
+            var h_fin = mapOf("h_fin" to Timestamp(System.currentTimeMillis()) )
             tareaRef.update(h_fin)
             val intent = Intent(this, FeedbackAportadoActivity::class.java)
             intent.putExtra("operario", CodOperario)

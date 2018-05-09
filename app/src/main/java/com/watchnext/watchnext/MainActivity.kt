@@ -51,18 +51,17 @@ class MainActivity : AppCompatActivity() {
             var codigo = -1 //0->usr y pass incorrecto, 1->pass incorrecto, 2->correcto
             if ((CodOperario.length > 0) and (editText_passwd.length() > 0)) { //Si los campos no estan vacíos
                 val successDialogBuilder = AlertDialog.Builder(this)
-//                val job1 = launch(Background) {
                     val operacion = operariosRef.document(editText_name.text.toString()).get().addOnSuccessListener { operario->
                         if(operario.exists()) {
                             Log.w("QUERY", "Documento: " + operario.get("id"))
                             if (editText_passwd.text.toString().equals(operario.get("pass").toString())) {
-                                operariosConectadosRef.document(editText_name.text.toString()).update(mapOf( "conectado" to true ))
+                                operariosRef.document(editText_name.text.toString()).update(mapOf( "conectado" to true ))
                                 Log.w("QUERY", "Password: " + operario.get("pass"))
                                 Log.w("SUCCESSFUL", "documento: " + operario.get("id") + ", pass: " + operario.get("pass"))
                                 successDialogBuilder.setTitle("Bienvienid@ " + editText_name.text)
                                 successDialogBuilder.setMessage("Gracias por usar WatchNext")
                                 codigo = 2
-                                operariosConectadosRef.document(editText_name.text.toString()).get().addOnSuccessListener { operarioConectado->
+                                operariosRef.document(editText_name.text.toString()).get().addOnSuccessListener { operarioConectado->
                                     if(operarioConectado.exists()) {
                                         doAsync {
                                             doGet(URL_SOLICITAR_TAREA + "id=" + operarioConectado.get("id"))
@@ -81,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                                         }
 
                                     }else{
-                                        creaOperario(operario, operariosConectadosRef)
                                         ejecutarRedireccion(false, operario.get("id").toString(), Tarea(), successDialogBuilder)
                                     }
                                 }
@@ -99,8 +97,6 @@ class MainActivity : AppCompatActivity() {
                         Log.w("CREATING ALERT", "" + codigo)
                         creaAlerta(alertDialogBuilder, codigo)
                     }
-//                }
-
 
             } else {
                     alertDialogBuilder.setTitle("Error al acceder al sistema")
@@ -184,11 +180,5 @@ class MainActivity : AppCompatActivity() {
         val b = successDialogBuilder.create()
         b.show()
     }
-    private fun creaOperario(document: DocumentSnapshot,operariosConectadosRef:CollectionReference) {
-        var operario = Operario(document.get("id") as Number, true, document.get("etiquetas") as ArrayList<String>, ArrayList<Number>())
-        operariosConectadosRef.document(operario.id.toString()).set(operario.toStringMap())
-    }
-
-
 }
 

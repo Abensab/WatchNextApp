@@ -56,12 +56,10 @@ class AceptarTareaActivity : AppCompatActivity() {
 
         loadingPanelAT.visibility = View.VISIBLE
         var db = FirebaseFirestore.getInstance()//referencia de firestore
-        var operariosConectadosRef =db.collection("operariosConectados")
         val operariosRef = db.collection("operarios")
-        val operarios = operariosRef.get()
 
         logout_button.setOnClickListener({
-            FirebaseFirestore.getInstance().collection("operariosConectados").document(CodOperario.toString()).update("conectado" , false)
+            FirebaseFirestore.getInstance().collection("operarios").document(CodOperario.toString()).update("conectado" , false)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent, Bundle())
         })
@@ -89,7 +87,7 @@ class AceptarTareaActivity : AppCompatActivity() {
                 duracionTarea_textView.visibility=View.INVISIBLE
                 Log.i("NOTICE" , "No se ha devuleto ninguna tarea " + respuesta)
                 if(JSONObject(respuesta).get("error").equals("No hay tareas")){
-                    operariosConectadosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    operariosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                         loadingPanelAT.visibility = View.VISIBLE
                         if(firebaseFirestoreException!=null) {
                             Log.e("Listen failed: ",firebaseFirestoreException.toString())
@@ -131,7 +129,7 @@ class AceptarTareaActivity : AppCompatActivity() {
         duracionTarea_textView.text = tarea.descripcion
         button_aceptarTarea.setActivated(true)
         button_aceptarTarea.setOnClickListener {
-            var h_inicio = mapOf("h_inicio" to Timestamp(System.currentTimeMillis()).nanos)
+            var h_inicio = mapOf("h_inicio" to Timestamp(System.currentTimeMillis()))
             Log.w("ATA-timestamp", "timestamp: "+h_inicio.get("h_inicio"))
             tareasAsignadasRef.document(tarea.id.toString()).update(h_inicio)
             val intent = Intent(this, TareaEnEjecucionActivity::class.java)

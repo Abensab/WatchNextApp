@@ -86,7 +86,7 @@ class FeedbackAportadoActivity : AppCompatActivity() {
         imageViewNeutral.setOnClickListener {
             nivelSatisfaccion = NEUTRAL
             imageViewDissatisfiedBorder.visibility = View.INVISIBLE
-            tareaTextView.visibility = View.INVISIBLE
+            imageViewSatisfiedBorder.visibility = View.INVISIBLE
             imageViewNeutralBorder.visibility = View.VISIBLE
         }
     }
