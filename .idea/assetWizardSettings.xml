@@ -40,6 +40,7 @@
                                       <entry key="foregroundLayerName" value="ic_watchnext_foreground" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="outputName" value="ic_watchnextlogo" />
+                                      <entry key="previewDensity" value="MEDIUM" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>

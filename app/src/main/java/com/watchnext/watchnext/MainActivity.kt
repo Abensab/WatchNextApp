@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 import android.util.Log
 import android.view.View
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -33,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         doGet(URL_SOLICITAR_TAREA)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         loadingPanel.visibility=View.INVISIBLE
         val db = FirebaseFirestore.getInstance()//referencia de firestore
         val operariosRef = db.collection("operarios")
