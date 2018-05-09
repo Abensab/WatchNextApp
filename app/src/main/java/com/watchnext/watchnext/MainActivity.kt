@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             var codigo = -1 //0->usr y pass incorrecto, 1->pass incorrecto, 2->correcto
             if ((CodOperario.length > 0) and (editText_passwd.length() > 0)) { //Si los campos no estan vacíos
                 val successDialogBuilder = AlertDialog.Builder(this)
-                val job1 = launch(Background) {
+//                val job1 = launch(Background) {
                     val operacion = operariosRef.document(editText_name.text.toString()).get().addOnSuccessListener { operario->
                         if(operario.exists()) {
                             Log.w("QUERY", "Documento: " + operario.get("id"))
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                         Log.w("CREATING ALERT", "" + codigo)
                         creaAlerta(alertDialogBuilder, codigo)
                     }
-                }
+//                }
 
 
             } else {

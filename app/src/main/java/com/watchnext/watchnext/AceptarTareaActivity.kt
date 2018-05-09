@@ -106,16 +106,6 @@ class AceptarTareaActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-//                            while (job3.isActive) {}//TODO: esto esta feo
-//                            job3.invokeOnCompletion {
-//                                if (!respuesta.contentEquals("error")) {
-//                                    Log.e("WTF_Entra", respuesta)
-//                                    System.out.println("Respuesta: " + respuesta)
-//                                    var x = JSONObject(respuesta)
-//                                    visualizarTarea(x, CodOperario)//TODO: aqui explota
-//                                }
-//                            }
-
                         } else {
                             System.out.print("Current data: null")
                         }
