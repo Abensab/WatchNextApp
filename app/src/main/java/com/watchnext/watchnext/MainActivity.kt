@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.View
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 
 import java.io.IOException
@@ -64,24 +66,25 @@ class MainActivity : AppCompatActivity() {
                                 codigo = 2
                                 operariosConectadosRef.document(editText_name.text.toString()).get().addOnSuccessListener { operarioConectado->
                                     if(operarioConectado.exists()) {
-                                        val job = launch(Background) { doGet(URL_SOLICITAR_TAREA + "id=" + operarioConectado.get("id")) }
-                                        while (job.isActive) {//TODO: esto esta feo
+                                        doAsync {
+                                            doGet(URL_SOLICITAR_TAREA + "id=" + operarioConectado.get("id"))
+                                            uiThread {
+                                                Log.w("WORK END", "res:" + respuesta.toString())
 
-                                        }
-                                        job.invokeOnCompletion {
-                                            Log.w("WORK END", "res:" + respuesta.toString())
-
-                                            if (respuesta.contentEquals("no hay tareas") || respuesta.equals("")) {
-                                                Log.w("NO TAREA FOUND", "No hay tareas disponibles " + respuesta)
-                                                ejecutarRedireccion(false, operarioConectado.get("id").toString(), Tarea(), successDialogBuilder)
-                                            } else {
-                                                var tarea = Tarea(JSONObject(respuesta).get("tarea") as JSONObject)
-                                                Log.w("TAREA FOUND", "hay tarea disponible " + respuesta)
-                                                ejecutarRedireccion(true, operarioConectado.get("id").toString(), tarea, successDialogBuilder)
+                                                if (respuesta.contentEquals("no hay tareas") || respuesta.equals("")) {
+                                                    Log.w("NO TAREA FOUND", "No hay tareas disponibles " + respuesta)
+                                                    ejecutarRedireccion(false, operarioConectado.get("id").toString(), Tarea(), successDialogBuilder)
+                                                } else {
+                                                    var tarea = Tarea(JSONObject(respuesta).get("tarea") as JSONObject)
+                                                    Log.w("TAREA FOUND", "hay tarea disponible " + respuesta)
+                                                    ejecutarRedireccion(true, operarioConectado.get("id").toString(), tarea, successDialogBuilder)
+                                                }
                                             }
                                         }
+
                                     }else{
                                         creaOperario(operario, operariosConectadosRef)
+                                        ejecutarRedireccion(false, operario.get("id").toString(), Tarea(), successDialogBuilder)
                                     }
                                 }
 

@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AcceptingTaskActivity" />
+        <!--<activity android:name=".AcceptingTaskActivity" />-->
         <activity android:name=".AceptarTareaActivity" />
         <activity android:name=".TareaEnEjecucionActivity" />
         <activity android:name=".FeedbackAportadoActivity" />

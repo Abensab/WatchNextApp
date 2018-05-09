@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">WatchNext</string>
+    <!--<string name="app_name">WatchNext</string>-->
+    <string name="app_name">WatchNext Andi\'s version</string>
 </resources>

@@ -10,6 +10,8 @@ import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_aceptar_tarea.*
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 import java.io.IOException
 import java.net.URL
@@ -84,6 +86,7 @@ class AceptarTareaActivity : AppCompatActivity() {
                     }
                 }
             }else{
+                duracionTarea_textView.visibility=View.INVISIBLE
                 Log.i("NOTICE" , "No se ha devuleto ninguna tarea " + respuesta)
                 if(JSONObject(respuesta).get("error").equals("No hay tareas")){
                     operariosConectadosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
@@ -93,18 +96,25 @@ class AceptarTareaActivity : AppCompatActivity() {
                         }
                         if (documentSnapshot != null && documentSnapshot.exists()) {
                             Log.w("Current data ", documentSnapshot.getData().toString())
-                            val job3 = launch(Background) {
+                            doAsync {
                                 doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
-                            }
-                            while (job3.isActive) {}//TODO: esto esta feo
-                            job3.invokeOnCompletion {
-                                if (!respuesta.contentEquals("error")) {
-                                    Log.e("WTF_Entra", respuesta)
-                                    System.out.println("Respuesta: " + respuesta)
-//                                    var x = JSONObject(respuesta)
-//                                    visualizarTarea(x, CodOperario)//TODO: aqui explota
+                                uiThread {
+                                    if (respuesta!=null && !respuesta.contentEquals("error")&& respuesta!="") {
+                                        Log.e("WTF_Entra", respuesta)
+                                        System.out.println("Respuesta: " + respuesta)
+                                        visualizarTarea(JSONObject(respuesta), CodOperario)//TODO: aqui explota
+                                    }
                                 }
                             }
+//                            while (job3.isActive) {}//TODO: esto esta feo
+//                            job3.invokeOnCompletion {
+//                                if (!respuesta.contentEquals("error")) {
+//                                    Log.e("WTF_Entra", respuesta)
+//                                    System.out.println("Respuesta: " + respuesta)
+//                                    var x = JSONObject(respuesta)
+//                                    visualizarTarea(x, CodOperario)//TODO: aqui explota
+//                                }
+//                            }
 
                         } else {
                             System.out.print("Current data: null")
@@ -116,42 +126,6 @@ class AceptarTareaActivity : AppCompatActivity() {
         }catch (e: Exception){              //No hay tareas -> Pongo escuchador
             Log.e("ERROR", e.printStackTrace().toString())
         }
-
-
-
-
-        //TODO: Esto de aqui abajo debería sobrar....
-       /* var tareasSinAsignarRef = db.collection("sinAsignar")
-        var tareasSinAsignar = tareasSinAsignarRef.get()
-        tareasSinAsignar.addOnSuccessListener { snapshot ->
-            for (document in snapshot.documents) {
-                var etiquetas = document.get("etiquetas") as ArrayList<String> //Esto es porque el tipo de dato en firebase es "Array"
-                Log.w("ATA-ETIQUETAS", "etiquetas: " + etiquetas)
-                if (etiquetas.size == 0 && document.get("asignable") as Boolean) { // Esto es porque el tipo de dato en Firebase es "Boolean"
-                    //TODO consultar los operarios que tienen etiquetas con las faenas que tienen etiqueta
-                    Log.w("ATA-MODIFICAMOS", "Documento: " + document.get("id") + " Modificamos con exito el valor?" + tareasSinAsignarRef.document(document.get("id").toString()).update("asignable", false))
-                    operarios.addOnSuccessListener { snap ->
-                        for (doc in snap.documents) {
-                            Log.w("ATA-MODIFICAMOS", "Documento: " +CodOperario.javaClass +", " + doc.get("id").javaClass +", " + (CodOperario==(doc.get("id"))))
-                            if (CodOperario.toString().equals(doc.get("id").toString())) {
-                                var operariosConectadosRef =db.collection("operariosConectados")
-                                var tareas = doc.get("tareas") as ArrayList<Number>
-                                tareas.add(document.get("id") as Number)
-                                operariosConectadosRef.document(doc.id).update(mapOf("tareas" to tareas))
-                                mostrarTarea(document, doc)
-                                break
-                            } else {
-                                nombreTarea_textView.text = "Usuario no encontrado en la base de datos"
-                                Log.w("ATA-MODIFICAMOS", "Documento: " + document.get("id") + " Modificamos con exito el valor?" + tareasSinAsignarRef.document(document.get("id").toString()).update("asignable", true))
-                            }
-                        }
-                    }
-                    break
-                } else {
-                    nombreTarea_textView.text = "En este momento no hay tareas disponibles"
-                }
-            }
-        }*/
     }
 
     private fun mostrarTarea(ta :Tarea, op : Number){
@@ -159,11 +133,11 @@ class AceptarTareaActivity : AppCompatActivity() {
         val objetoIntent : Intent =intent
         var CodOperario = objetoIntent.getStringExtra("operario")
         var db = FirebaseFirestore.getInstance()//referencia de firestore
-        var operariosAsignadosRef =db.collection("operariosConectados")
         var tareasAsignadasRef =db.collection("asignadas")
         loadingPanelAT.visibility = View.INVISIBLE
         var tarea = ta
         nombreTarea_textView.text = tarea.titulo.toString()
+        duracionTarea_textView.visibility=View.VISIBLE
         duracionTarea_textView.text = tarea.descripcion
         button_aceptarTarea.setActivated(true)
         button_aceptarTarea.setOnClickListener {
