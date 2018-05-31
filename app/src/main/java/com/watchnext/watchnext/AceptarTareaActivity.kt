@@ -53,7 +53,8 @@ class AceptarTareaActivity : AppCompatActivity() {
 
 
     private fun getTarea(CodOperario:Number) {
-
+        var tiempoIni:Long=0
+        var timeout=false
         loadingPanelAT.visibility = View.VISIBLE
         var db = FirebaseFirestore.getInstance()//referencia de firestore
         val operariosRef = db.collection("operarios")
@@ -86,31 +87,54 @@ class AceptarTareaActivity : AppCompatActivity() {
             }else{
                 duracionTarea_textView.visibility=View.INVISIBLE
                 Log.i("NOTICE" , "No se ha devuleto ninguna tarea " + respuesta)
-                if(JSONObject(respuesta).get("error").equals("No hay tareas")){
-                    operariosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                        loadingPanelAT.visibility = View.VISIBLE
-                        if(firebaseFirestoreException!=null) {
-                            Log.e("Listen failed: ",firebaseFirestoreException.toString())
-                        }
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            Log.w("Current data ", documentSnapshot.getData().toString())
-                            doAsync {
-                                doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
-                                uiThread {
-                                    if (respuesta!=null && !respuesta.contentEquals("error")&& respuesta!="") {
-                                        Log.e("WTF_Entra", respuesta)
-                                        System.out.println("Respuesta: " + respuesta)
-                                        visualizarTarea(JSONObject(respuesta), CodOperario)//TODO: aqui explota
+                if(respuesta.contains("errror")){
+                    if (JSONObject(respuesta).get("error").equals("No hay tareas")) {
+                        operariosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                            loadingPanelAT.visibility = View.VISIBLE
+                            if (firebaseFirestoreException != null) {
+                                Log.e("Listen failed: ", firebaseFirestoreException.toString())
+                            }
+                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                Log.w("Current data ", documentSnapshot.getData().toString())
+                                doAsync {
+                                    doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
+                                    uiThread {
+                                        if (respuesta != null && !respuesta.contentEquals("error") && respuesta != "") {
+                                            Log.e("WTF_Entra", respuesta)
+                                            System.out.println("Respuesta: " + respuesta)
+                                            visualizarTarea(JSONObject(respuesta), CodOperario)//TODO: aqui explota
+                                        }
                                     }
                                 }
+                            } else {
+                                System.out.print("Current data: null")
                             }
-                        } else {
-                            System.out.print("Current data: null")
-                        }
 
+                        }
+                    }
+                }else{
+                    doAsync {
+                        tiempoIni=System.currentTimeMillis()
+                        while (!timeout){
+                            if((tiempoIni-System.currentTimeMillis())<(-30000)){
+                                timeout=true
+                            }
+                        }
+                        uiThread {
+                            if(timeout==true){
+                                Log.w("Tiempo sobrepasado", (tiempoIni-System.currentTimeMillis()).toString())
+                                nombreTarea_textView.text = "No se han encontrado tareas disponibles"
+                                duracionTarea_textView.text = "Por favor habla con tu encargado."
+                                duracionTarea_textView.visibility=View.VISIBLE
+                                loadingPanelAT.visibility = View.INVISIBLE
+                                button_aceptarTarea.isClickable=false
+                                button_aceptarTarea.visibility= View.INVISIBLE
+                            }
+                        }
                     }
                 }
             }
+
         }catch (e: Exception){              //No hay tareas -> Pongo escuchador
             Log.e("ERROR", e.printStackTrace().toString())
         }
