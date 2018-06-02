@@ -29,6 +29,7 @@ class TareaEnEjecucionActivity : AppCompatActivity() {
         Log.w("TEE-TAREA",tarea.toString())
         nombreTarea_textView_EnEjecucion.text = tarea.getString("titulo")
         duracionTarea_textView_EnEjecucion.text = tarea.getString("descripcion")
+        autheticatedUser2.text = autheticatedUser2.text.toString() + objetoIntent.getStringExtra("nombre_apellidos")
 
 
 

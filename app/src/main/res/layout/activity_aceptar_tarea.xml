@@ -84,5 +84,16 @@
         android:gravity="center"
         android:indeterminate="true" />
 
+    <TextView
+        android:id="@+id/autheticatedUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Autenticado como: "
+        android:textColor="@android:color/black" />
+
 
 </RelativeLayout>

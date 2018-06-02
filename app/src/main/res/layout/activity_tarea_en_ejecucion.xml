@@ -7,6 +7,17 @@
     tools:context=".TareaEnEjecucionActivity"
     android:background="#eeeeee">
 
+    <TextView
+        android:id="@+id/autheticatedUser2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Autenticado como: "
+        android:textColor="@android:color/black" />
+
     <TextClock
         android:id="@+id/time_textClock_EnEjecucion"
         android:layout_width="260dp"

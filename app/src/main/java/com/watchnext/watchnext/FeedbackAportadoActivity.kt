@@ -117,6 +117,7 @@ class FeedbackAportadoActivity : AppCompatActivity() {
         private val NEUTRAL = 0
         private val SATISFIED = 1
     }
+
     private fun doGet(url: String) {
         var message = ""
         try {

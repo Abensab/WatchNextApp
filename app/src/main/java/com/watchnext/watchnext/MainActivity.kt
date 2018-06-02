@@ -26,6 +26,9 @@ class MainActivity : AppCompatActivity() {
 
     var respuesta = ""
 
+    var nombre = ""
+    var apellidos = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         var alertDialogBuilder  = AlertDialog.Builder(this)
@@ -58,8 +61,10 @@ class MainActivity : AppCompatActivity() {
                                 operariosRef.document(editText_name.text.toString()).update(mapOf( "conectado" to true ))
                                 Log.w("QUERY", "Password: " + operario.get("pass"))
                                 Log.w("SUCCESSFUL", "documento: " + operario.get("id") + ", pass: " + operario.get("pass"))
-                                successDialogBuilder.setTitle("Bienvienid@ " + editText_name.text)
-                                successDialogBuilder.setMessage("Gracias por usar WatchNext")
+                                nombre = operario.getString("nombre")
+                                apellidos = operario.getString("apellidos")
+                                successDialogBuilder.setTitle("Bienvienid@ " + nombre + " " + apellidos)
+                                //successDialogBuilder.setMessage("Gracias por usar WatchNext")
                                 codigo = 2
                                 operariosRef.document(editText_name.text.toString()).get().addOnSuccessListener { operarioConectado->
                                     if(operarioConectado.exists()) {
@@ -78,12 +83,10 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
                                         }
-
                                     }else{
                                         ejecutarRedireccion(false, operario.get("id").toString(), Tarea(), successDialogBuilder)
                                     }
                                 }
-
                             }else{//La contraseña no corresponde
                                 Log.e("ERROR", "La contraseña es incorrecta")
                                 codigo=1
@@ -168,12 +171,14 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, TareaEnEjecucionActivity::class.java)
                 intent.putExtra("operario", codOperario.toString())
                 intent.putExtra("tarea", tarea.toJSONObject().toString())
+                intent.putExtra("nombre_apellidos", nombre + " " + apellidos)
                 startActivity(intent, Bundle())
             })
         }else {
             successDialogBuilder.setPositiveButton("OK", DialogInterface.OnClickListener { button, whichButton ->
                 val intent = Intent(this, AceptarTareaActivity::class.java)
                 intent.putExtra("operario", codOperario)
+                intent.putExtra("nombre_apellidos", nombre + " " + apellidos)
                 startActivity(intent, Bundle())
             })
         }

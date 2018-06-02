@@ -10,6 +10,7 @@ import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_aceptar_tarea.*
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
@@ -27,6 +28,7 @@ class AceptarTareaActivity : AppCompatActivity() {
 
     var respuesta = ""
 
+    var nombre_apellidos = ""
     /* Por defecto, el botón de 'Aceptar tarea' está inhabilitado,
      * y en nombre tarea y duración tarea se muestran los siguientes mensajes:
      * 'En este momento no hay tareas disponibles' y
@@ -44,6 +46,8 @@ class AceptarTareaActivity : AppCompatActivity() {
         button_aceptarTarea.visibility= View.INVISIBLE
         val objetoIntent : Intent =intent
         var CodOperario = objetoIntent.getStringExtra("operario").toInt()
+        nombre_apellidos = objetoIntent.getStringExtra("nombre_apellidos")
+        autheticatedUser.text = autheticatedUser.text.toString() + nombre_apellidos
         Log.w("ATA-COMPROBANDO", "CodOperario: " +CodOperario)
         nombreTarea_textView.text = "Estamos buscando tareas disponibles..."
         duracionTarea_textView.text = "Tiempo de espera hasta recibir tarea: DESCONOCIDO"
@@ -63,6 +67,9 @@ class AceptarTareaActivity : AppCompatActivity() {
             FirebaseFirestore.getInstance().collection("operarios").document(CodOperario.toString()).update("conectado" , false)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent, Bundle())
+            val alertDialog = AlertDialog.Builder(this)
+            alertDialog.setTitle("Gracias por usar WatchNext")
+            alertDialog.show()
         })
 
         //TODO Empezamos por aqui...
@@ -159,6 +166,7 @@ class AceptarTareaActivity : AppCompatActivity() {
             val intent = Intent(this, TareaEnEjecucionActivity::class.java)
             intent.putExtra("operario", CodOperario.toString())
             intent.putExtra("tarea", tarea.toJSONObject().toString())
+            intent.putExtra("nombre_apellidos", nombre_apellidos)
             startActivity(intent, Bundle())
             finish()
         }
