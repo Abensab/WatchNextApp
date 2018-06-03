@@ -156,6 +156,7 @@ class AceptarTareaActivity : AppCompatActivity() {
             var h_inicio = mapOf("h_inicio" to Timestamp(System.currentTimeMillis()))
             Log.w("ATA-timestamp", "timestamp: "+h_inicio.get("h_inicio"))
             tareasAsignadasRef.document(tarea.id.toString()).update(h_inicio)
+            tareasAsignadasRef.document(tarea.id.toString()).update(mapOf("aceptada" to true))
             val intent = Intent(this, TareaEnEjecucionActivity::class.java)
             intent.putExtra("operario", CodOperario.toString())
             intent.putExtra("tarea", tarea.toJSONObject().toString())
