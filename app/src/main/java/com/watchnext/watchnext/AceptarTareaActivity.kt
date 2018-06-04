@@ -73,77 +73,77 @@ class AceptarTareaActivity : AppCompatActivity() {
         })
 
         //TODO Empezamos por aqui...
-        val job = launch(Background) {
-           doGet(URL_ASIGNAR_TAREA + "id=" + CodOperario)
-        }
-        while (job.isActive) {}//TODO: esto esta feo
-        try{    //Tarea asignada correctamente
-            Log.i("TRY" , "mensaje " + respuesta)
-            if(respuesta.contains("type")){
-                if(JSONObject(respuesta).get("type")!=null) {
-                    Log.i("Mensaje", respuesta.toString())
-                    val job2 = launch(Background) {
-                        doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
-                    }
-                    while (job2.isActive) {
-                    }//TODO: esto esta feo
-                    job2.invokeOnCompletion {
-                        visualizarTarea(JSONObject(respuesta), CodOperario)
-                    }
-                }
-            }else{
-                duracionTarea_textView.visibility=View.INVISIBLE
-                Log.i("NOTICE" , "No se ha devuleto ninguna tarea " + respuesta)
-                if(respuesta.contains("errror")){
-                    if (JSONObject(respuesta).get("error").equals("No hay tareas")) {
-                        operariosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            loadingPanelAT.visibility = View.VISIBLE
-                            if (firebaseFirestoreException != null) {
-                                Log.e("Listen failed: ", firebaseFirestoreException.toString())
+        doAsync {
+            doGet(URL_ASIGNAR_TAREA + "id=" + CodOperario)
+
+            uiThread {}
+            try {    //Tarea asignada correctamente
+                Log.i("TRY", "mensaje " + respuesta)
+                if (respuesta.contains("type")) {
+                    if (JSONObject(respuesta).get("type") != null) {
+                        Log.i("Mensaje", respuesta.toString())
+                        doAsync {
+                            doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
+                            uiThread {
+                                Log.i("Respuesta", respuesta.toString())
+                                visualizarTarea(JSONObject(respuesta), CodOperario)
                             }
-                            if (documentSnapshot != null && documentSnapshot.exists()) {
-                                Log.w("Current data ", documentSnapshot.getData().toString())
-                                doAsync {
-                                    doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
-                                    uiThread {
-                                        if (respuesta != null && !respuesta.contentEquals("error") && respuesta != "") {
-                                            Log.e("WTF_Entra", respuesta)
-                                            System.out.println("Respuesta: " + respuesta)
-                                            visualizarTarea(JSONObject(respuesta), CodOperario)//TODO: aqui explota
+                        }
+                    }
+                } else {
+                    duracionTarea_textView.visibility = View.INVISIBLE
+                    Log.i("NOTICE", "No se ha devuleto ninguna tarea " + respuesta)
+                    if (respuesta.contains("errror")) {
+                        if (JSONObject(respuesta).get("error").equals("No hay tareas")) {
+                            operariosRef.document(CodOperario.toString()).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                loadingPanelAT.visibility = View.VISIBLE
+                                if (firebaseFirestoreException != null) {
+                                    Log.e("Listen failed: ", firebaseFirestoreException.toString())
+                                }
+                                if (documentSnapshot != null && documentSnapshot.exists()) {
+                                    Log.w("Current data ", documentSnapshot.getData().toString())
+                                    doAsync {
+                                        doGet(URL_SOLICITAR_TAREA + "id=" + CodOperario)
+                                        uiThread {
+                                            if (respuesta != null && !respuesta.contentEquals("error") && respuesta != "") {
+                                                Log.e("WTF_Entra", respuesta)
+                                                System.out.println("Respuesta: " + respuesta)
+                                                visualizarTarea(JSONObject(respuesta), CodOperario)//TODO: aqui explota
+                                            }
                                         }
                                     }
+                                } else {
+                                    System.out.print("Current data: null")
                                 }
-                            } else {
-                                System.out.print("Current data: null")
-                            }
 
-                        }
-                    }
-                }else{
-                    doAsync {
-                        tiempoIni=System.currentTimeMillis()
-                        while (!timeout){
-                            if((tiempoIni-System.currentTimeMillis())<(-30000)){
-                                timeout=true
                             }
                         }
-                        uiThread {
-                            if(timeout==true){
-                                Log.w("Tiempo sobrepasado", (tiempoIni-System.currentTimeMillis()).toString())
-                                nombreTarea_textView.text = "No se han encontrado tareas disponibles"
-                                duracionTarea_textView.text = "Por favor habla con tu encargado."
-                                duracionTarea_textView.visibility=View.VISIBLE
-                                loadingPanelAT.visibility = View.INVISIBLE
-                                button_aceptarTarea.isClickable=false
-                                button_aceptarTarea.visibility= View.INVISIBLE
+                    } else {
+                        doAsync {
+                            tiempoIni = System.currentTimeMillis()
+                            while (!timeout) {
+                                if ((tiempoIni - System.currentTimeMillis()) < (-30000)) {
+                                    timeout = true
+                                }
+                            }
+                            uiThread {
+                                if (timeout == true) {
+                                    Log.w("Tiempo sobrepasado", (tiempoIni - System.currentTimeMillis()).toString())
+                                    nombreTarea_textView.text = "No se han encontrado tareas disponibles"
+                                    duracionTarea_textView.text = "Por favor habla con tu encargado."
+                                    duracionTarea_textView.visibility = View.VISIBLE
+                                    loadingPanelAT.visibility = View.INVISIBLE
+                                    button_aceptarTarea.isClickable = false
+                                    button_aceptarTarea.visibility = View.INVISIBLE
+                                }
                             }
                         }
                     }
                 }
-            }
 
-        }catch (e: Exception){              //No hay tareas -> Pongo escuchador
-            Log.e("ERROR", e.printStackTrace().toString())
+            } catch (e: Exception) {              //No hay tareas -> Pongo escuchador
+                Log.e("ERROR", e.printStackTrace().toString())
+            }
         }
     }
 
@@ -163,6 +163,8 @@ class AceptarTareaActivity : AppCompatActivity() {
             var h_inicio = mapOf("h_inicio" to Timestamp(System.currentTimeMillis()))
             Log.w("ATA-timestamp", "timestamp: "+h_inicio.get("h_inicio"))
             tareasAsignadasRef.document(tarea.id.toString()).update(h_inicio)
+            tareasAsignadasRef.document(tarea.id.toString()).update(mapOf("operario" to CodOperario))
+            tareasAsignadasRef.document(tarea.id.toString()).update(mapOf("aceptada" to true))
             val intent = Intent(this, TareaEnEjecucionActivity::class.java)
             intent.putExtra("operario", CodOperario.toString())
             intent.putExtra("tarea", tarea.toJSONObject().toString())
